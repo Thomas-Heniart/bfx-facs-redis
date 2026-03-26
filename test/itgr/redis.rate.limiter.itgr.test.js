@@ -8,7 +8,7 @@ chai.use(chaiAsPromised)
 
 const { expect } = require('chai')
 const RedisFacility = require('../../index')
-const { RedisRateLimiterUtil } = require('../../libs/redis.rate.limiter')
+const { RedisRateLimiter } = require('../../libs/redis.rate.limiter')
 
 describe('Redis Rate Limiter Integration', () => {
   let redisFacility, redis, redisRateLimiter
@@ -25,11 +25,9 @@ describe('Redis Rate Limiter Integration', () => {
 
   beforeEach(async () => {
     await redis.flushdb()
-    redisRateLimiter = RedisRateLimiterUtil.register({
-      redis,
-      command: 'bfxRateLimit',
-      keyPrefix: 'bfx',
-      logError: console.error
+    redisRateLimiter = new RedisRateLimiter({
+      redisFac: redisFacility,
+      keyPrefix: 'bfx'
     })
   })
 
